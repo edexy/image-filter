@@ -30,6 +30,33 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   /**************************************************************************** */
 
   //! END @TODO1
+
+  app.get( "/filteredimage", async ( req, res) => {
+    const {image_url} = req.query;
+    if(!image_url){
+      res.status(422).json({
+        status: false,
+        message: 'image url is required'
+      })
+    }
+
+    if(!image_url.match(/\.(jpeg|jpg|gif|png)$/)){
+      res.status(422).json({
+        status: false,
+        message: 'invalid image url provided'
+      })
+    }
+    
+    const result = await filterImageFromURL(image_url);
+    res.status(200).json({
+      status: true,
+      data: result
+    })
+    res.on('close', () =>  {
+      console.log(`now removing file: ${result}`);
+      deleteLocalFiles([result])
+    });
+  })
   
   // Root Endpoint
   // Displays a simple message to the user
@@ -37,23 +64,6 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
     res.send("try GET /filteredimage?image_url={{}}")
   } );
   
-
-  app.get( "/filteredimage", async ( req, res) => {
-    const {image_url} = req.query;
-    if(!image_url){
-      res.status(400).json({
-        status: false,
-        message: 'image url is required'
-      })
-    }
-    
-    const result = await filterImageFromURL(image_url);
-    deleteLocalFiles([result]);
-    res.status(200).json({
-      status: true,
-      data: result
-    })
-  })
 
   // Start the Server
   app.listen( port, () => {

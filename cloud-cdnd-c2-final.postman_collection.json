@@ -50,7 +50,7 @@
     "variable": [{
         "id": "1df3d31a-de30-494b-a3d0-f1228dd8713c",
         "key": "HOST",
-        "value": "http://image-filter-app-dev.us-east-1.elasticbeanstalk.com",
+        "value": "image-filter-app-dev.us-east-1.elasticbeanstalk.com",
         "type": "string"
     }]
 }

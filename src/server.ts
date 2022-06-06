@@ -1,4 +1,5 @@
-import express from 'express';
+import express, {Request, Response} from 'express';
+
 import bodyParser from 'body-parser';
 import {filterImageFromURL, deleteLocalFiles} from './util/util';
 
@@ -31,7 +32,7 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
 
   //! END @TODO1
 
-  app.get( "/filteredimage", async (req, res) => {
+  app.get( "/filteredimage", async (req: Request, res: Response) => {
     const {image_url} = req.query;
     if(!image_url){
       res.status(422).json({
@@ -48,10 +49,7 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
     }
     
     const result = await filterImageFromURL(image_url);
-    res.status(200).json({
-      status: true,
-      data: result
-    })
+    res.status(200).sendFile(result)
     res.on('close', () =>  {
       console.log(`now removing file: ${result}`);
       deleteLocalFiles([result])
